@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EchoVerse</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      text-align: center;
+      background: #000;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url("https://www.transparenttextures.com/patterns/stardust.png"),
+                  radial-gradient(circle at top, #020024, #090979, #000);
+      background-size: cover;
+      z-index: -2;
+    }
+    h1 {
+      font-size: 3em;
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff, 0 0 25px #0ff;
+      margin: 20px 0;
+    }
+    .container {
+      margin: 20px auto;
+      max-width: 850px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid rgba(0,255,255,0.3);
+      box-shadow: 0 0 15px rgba(0,255,255,0.2);
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      background: #111;
+      color: #0ff;
+      border: 1px solid #0ff;
+      border-radius: 8px;
+      padding: 10px;
+    }
+    select, button, input[type="file"] {
+      margin: 10px;
+      padding: 10px 15px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(0, 200, 255, 0.15);
+      color: #0ff;
+      font-weight: bold;
+      border: 1px solid #0ff;
+      cursor: pointer;
+    }
+    button:hover {
+      background: rgba(0, 200, 255, 0.4);
+      box-shadow: 0 0 15px #0ff;
+    }
+    .output {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 8px;
+      background: #111;
+      color: #0ff;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+
+    /* DATAMINERS Badge */
+    .dataminers-badge {
+      position: fixed;
+      top: 10px;
+      right: 15px;
+      background: rgba(0,0,0,0.6);
+      padding: 5px 12px;
+      border-radius: 8px;
+      border: 1px solid #0ff;
+      font-size: 0.9em;
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+      font-weight: bold;
+      z-index: 5;
+    }
+
+    /* Help Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0; top: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+    }
+    .modal-content {
+      background: #111;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #0ff;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 15px;
+      text-align: left;
+      color: #0ff;
+      box-shadow: 0 0 20px rgba(0,255,255,0.5);
+    }
+    .modal-content h2 {
+      text-align: center;
+      text-shadow: 0 0 10px #0ff;
+    }
+    .close {
+      float: right;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: #0ff;
+    }
+    .close:hover {
+      color: red;
+    }
+
+    /* Futuristic Sections */
+    .info-section, .rating-section, .feedback-section, .social {
+      margin: 30px auto;
+      max-width: 850px;
+      background: rgba(0, 0, 0, 0.65);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid rgba(0,255,255,0.3);
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+    }
+    .info-section h2, .rating-section h2, .feedback-section h2, .social h2 {
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #00f;
+      margin-bottom: 15px;
+    }
+
+    /* Stars */
+    .stars span {
+      font-size: 2em;
+      cursor: pointer;
+      transition: 0.3s;
+      color: #555;
+    }
+    .stars span.active {
+      color: #0ff;
+      text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+    }
+    .stars span:hover {
+      transform: scale(1.2);
+    }
+
+    /* Feedback */
+    .feedback-section textarea {
+      width: 100%;
+      height: 100px;
+      border: 1px solid #0ff;
+      border-radius: 8px;
+      background: #111;
+      color: #0ff;
+      padding: 10px;
+    }
+    .feedback-section button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid #0ff;
+      background: rgba(0,200,255,0.2);
+      color: #0ff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .feedback-section button:hover {
+      background: rgba(0,200,255,0.5);
+      box-shadow: 0 0 15px #0ff;
+    }
+
+    /* Social */
+    .social-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .social a {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 25px;
+      border: 1px solid #0ff;
+      background: rgba(0,200,255,0.1);
+      color: #0ff;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .social a:hover {
+      background: rgba(0,200,255,0.5);
+      color: #fff;
+      box-shadow: 0 0 15px #0ff;
+    }
+
+    footer {
+      margin: 20px;
+      font-size: 0.9em;
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+    }
+  </style>
+</head>
+<body>
+  <!-- Small DATAMINERS badge -->
+  <div class="dataminers-badge">DATAMINERS</div>
+
+  <h1>EchoVerse</h1>
+
+  <div class="container">
+    <h3>Upload or Paste Text</h3>
+    <input type="file" id="fileInput" accept=".txt" /><br><br>
+    <textarea id="textInput" placeholder="Paste or type text here..."></textarea><br>
+    <button id="generateBtn">Output</button>
+    <button id="playBtn">Play</button>
+    <button id="pauseBtn">Pause</button>
+    <button id="stopBtn">Stop</button>
+    <button id="micBtn">🎤 Microphone</button>
+    <button id="helpBtn">❓ Help</button>
+    <div class="output" id="output">Output will appear here...</div>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="helpModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeHelp">&times;</span>
+      <h2>❓ How to Use EchoVerse</h2>
+      <p>1️⃣ Upload a text file or type text in the box.</p>
+      <p>2️⃣ Click <b>Output</b> to display & hear the text.</p>
+      <p>3️⃣ Use <b>Play, Pause, Stop</b> to control playback.</p>
+      <p>4️⃣ Use the <b>🎤 Microphone</b> button to speak & convert speech to text.</p>
+      <p>5️⃣ Rate and give feedback below to help us improve 🚀.</p>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div class="info-section">
+    <h2>🌌 About EchoVerse</h2>
+    <p>
+      EchoVerse is your AI-powered audiobook companion.
+      Upload text, use the mic, and let the cosmos narrate your story.
+      From poems to novels, EchoVerse transforms words into immersive journeys.
+    </p>
+  </div>
+
+  <!-- Rating -->
+  <div class="rating-section">
+    <h2>⭐ Rate EchoVerse</h2>
+    <div class="stars" id="stars"></div>
+    <div class="rating-value" id="ratingValue">Click a star to rate</div>
+  </div>
+
+  <!-- Feedback -->
+  <div class="feedback-section">
+    <h2>📝 We Value Your Feedback</h2>
+    <textarea id="feedbackInput" placeholder="Write your feedback here..."></textarea><br>
+    <button id="submitFeedback">Submit Feedback</button>
+    <p id="feedbackMsg" style="margin-top:15px; color:#0ff;"></p>
+  </div>
+
+  <!-- Social -->
+  <div class="social">
+    <h2>🌐 Follow Us</h2>
+    <div class="social-links">
+      <a href="https://www.instagram.com/_jonathan_1403" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com" target="_blank">Facebook</a>
+      <a href="https://twitter.com" target="_blank">Twitter</a>
+      <a href="https://www.youtube.com" target="_blank">YouTube</a>
+    </div>
+  </div>
+
+  <footer>
+    🚀 DATAMINERS — Jonathan | Nandhakumar | Sachin 🌌 <br>
+    Built with ❤ by DATAMINERS
+  </footer>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const textInput = document.getElementById('textInput');
+    const output = document.getElementById('output');
+    let utterance;
+
+    // File Upload
+    fileInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = ev => { textInput.value = ev.target.result; };
+        reader.readAsText(file);
+      }
+    });
+
+    // Output Button
+    document.getElementById('generateBtn').addEventListener('click', () => {
+      const txt = textInput.value.trim();
+      if (!txt) { alert("⚠ Please type or upload some text first!"); return; }
+      output.textContent = txt;
+      if (utterance) speechSynthesis.cancel();
+      utterance = new SpeechSynthesisUtterance(txt);
+      speechSynthesis.speak(utterance);
+    });
+
+    // Play / Pause / Stop
+    document.getElementById('playBtn').addEventListener('click', () => {
+      if (speechSynthesis.paused) speechSynthesis.resume();
+    });
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+      speechSynthesis.pause();
+    });
+    document.getElementById('stopBtn').addEventListener('click', () => {
+      speechSynthesis.cancel();
+    });
+
+    // Microphone
+    let micActive = false;
+    let recognition;
+    document.getElementById('micBtn').addEventListener('click', () => {
+      if (!('webkitSpeechRecognition' in window)) {
+        alert("Speech recognition not supported in this browser. Use Chrome.");
+        return;
+      }
+      const micBtn = document.getElementById('micBtn');
+      if (!micActive) {
+        recognition = new webkitSpeechRecognition();
+        recognition.lang = "en-US";
+        recognition.interimResults = true;
+        recognition.continuous = true;
+        recognition.onresult = event => {
+          let transcript = "";
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript + " ";
+          }
+          textInput.value = transcript;
+          output.textContent = transcript;
+        };
+        recognition.start();
+        micActive = true;
+        micBtn.textContent = "🎙 Listening... Click to Stop";
+        micBtn.style.background = "rgba(0,255,100,0.4)";
+      } else {
+        recognition.stop();
+        micActive = false;
+        micBtn.textContent = "🎤 Microphone";
+        micBtn.style.background = "rgba(0,200,255,0.15)";
+      }
+    });
+
+    // ⭐ Rating
+    const stars = document.getElementById('stars');
+    const ratingValue = document.getElementById('ratingValue');
+
+    // Generate clickable stars
+    stars.innerHTML = Array.from({ length: 5 }, (_, i) => `<span data-star="${i + 1}">★</span>`).join("");
+
+    stars.addEventListener('click', e => {
+      if (e.target.dataset.star) {
+        let rating = e.target.dataset.star;
+        let starSpans = stars.querySelectorAll('span');
+        starSpans.forEach((star, index) => {
+          if (index < rating) star.classList.add('active');
+          else star.classList.remove('active');
+        });
+        ratingValue.textContent = `You rated: ${rating} / 5 ⭐`;
+      }
+    });
+
+    // Feedback
+    document.getElementById('submitFeedback').addEventListener('click', () => {
+      const feedback = document.getElementById('feedbackInput').value.trim();
+      const msg = document.getElementById('feedbackMsg');
+      if (!feedback) {
+        msg.textContent = "⚠ Please write some feedback before submitting.";
+        msg.style.color = "orange";
+        return;
+      }
+      msg.textContent = "✅ Thank you for your feedback!";
+      msg.style.color = "#0ff";
+      document.getElementById('feedbackInput').value = "";
+    });
+
+    // Help Modal
+    const helpBtn = document.getElementById('helpBtn');
+    const helpModal = document.getElementById('helpModal');
+    const closeHelp = document.getElementById('closeHelp');
+    helpBtn.onclick = () => { helpModal.style.display = "block"; };
+    closeHelp.onclick = () => { helpModal.style.display = "none"; };
+    window.onclick = (e) => { if (e.target === helpModal) helpModal.style.display = "none"; };
+  </script>
+</body>
+</html>
